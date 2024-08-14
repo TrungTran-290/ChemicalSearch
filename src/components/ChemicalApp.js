@@ -5,21 +5,22 @@ import { Container, Input, Label, Table } from "reactstrap";
 import {
   addChemical,
   deleteChemical,
-  editChemical,
-  filterChemical
+  editChemical
 } from "../redux/chemicalSlice";
 import SearchBar from "./SearchBar";
 import AddChemical from "./AddChemical";
-import "./chemicalapp.css"
-import Swal from 'sweetalert2'
+import "./chemicalapp.css";
+import Swal from 'sweetalert2';
+
 export default function ChemicalApp() {
-  const [search,setSearch] =useState("")
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const chemicals = useSelector((state) => state.chemicals.chemicals);
 
   const handle_add = (text) => {
     dispatch(addChemical(text));
   };
+
   const handle_delete = (text) => {
     Swal.fire({
       title: "Are you sure?",
@@ -29,7 +30,6 @@ export default function ChemicalApp() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
-      
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
@@ -40,21 +40,23 @@ export default function ChemicalApp() {
         dispatch(deleteChemical(text));
       }
     });
-   
   };
+
   const handle_edit = (text) => {
     dispatch(editChemical(text));
   };
-  const handle_search = (text) => {
-    dispatch(filterChemical(text));
-  };
+
+  const filteredChemicals = chemicals.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.formula.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <Container>
       <h1 className="title">Chemical App</h1>
-      <AddChemical handle_add={handle_add}/>
+      <AddChemical handle_add={handle_add} />
       <Table hover className="settable">
-        <SearchBar/>
+        <SearchBar />
         <thead>
           <tr>
             <th><i className="fa-solid fa-hashtag"></i> ID</th>
@@ -63,8 +65,8 @@ export default function ChemicalApp() {
             <th><i className="fa-solid fa-delete-left"></i> Action</th>
           </tr>
         </thead>
-        <tbody >
-          {chemicals.map((item, index) => (
+        <tbody>
+          {filteredChemicals.map((item, index) => (
             <Chemical
               key={index}
               chemical={item}
@@ -73,14 +75,18 @@ export default function ChemicalApp() {
             />
           ))}
         </tbody>
-        
       </Table>
-      <Label>SearchBar<Input value={search} onChange={(e)=>setSearch(e.target.value)} onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handle_search(search);
-            setSearch("");
-          }
-        }}></Input></Label>
+      <Label>Search:
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setSearch("");
+            }
+          }}
+        />
+      </Label>
     </Container>
   );
 }
