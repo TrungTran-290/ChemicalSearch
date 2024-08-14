@@ -2,7 +2,7 @@
   "name": "exam1",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://TrungTran-290.github.io/exam1/",
+  "homepage": "https://TrungTran-290.github.io/ChemicalSearch/",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "@testing-library/jest-dom": "^5.17.0",
